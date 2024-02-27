@@ -1,12 +1,9 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue';
-import http from "@/plugins/axios.js";
 
-  http.get('/users').then(res => {
-    console.log (res.data)
-  })
-// onMounted(() => {
-// })
+  // http.get('/users').then(res => {
+  //   console.log (res.data)
+  // })
 </script>
 
 <template>
