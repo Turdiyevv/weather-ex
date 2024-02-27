@@ -1,44 +1,59 @@
-<script setup>
-defineProps({
-  msg: {
-    type: String,
-    required: true
-  }
-})
-</script>
-
 <template>
-  <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
-    <h3>
-      You’ve successfully created a project with
-      <a href="https://vitejs.dev/" target="_blank" rel="noopener">Vite</a> +
-      <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
-    </h3>
+  <div class="flex">
+    <el-card class="box-card text-white bg-amber-950 w-2/3">
+    <template #header>
+      <div class="card-header">
+        <span>Card name</span>
+        <el-button class="button">Operation button</el-button>
+      </div>
+    </template>
+    <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
+    <template #footer>Footer content</template>
+  </el-card>
+
+    <el-card class="box-card w-1/3">
+    <template #header>
+      <div class="card-header">
+        <span>Card name</span>
+        <el-button class="button" text>Operation button</el-button>
+      </div>
+    </template>
+    <div v-for="(item, index) in County" :key="index" class="align-text-left">
+      <el-button class="text-xl my-1 w-full bg-amber-950 text-white">
+        {{ item.name }}
+      </el-button>
+    </div>
+    <template #footer>
+      <el-button class="flex">
+        <el-link href="https://t.me/Turdiyev07" class="decoration-neutral-50">
+          <img src="../assets/png-telegram-icon.png" alt="telegram"
+               style="width: 30px; height: 30px"
+          >
+          <span class="ml-2 text-blue-600">Turdiyev</span>
+        </el-link>
+      </el-button>
+    </template>
+  </el-card>
   </div>
 </template>
+<script lang="ts" setup>
+  import { reactive } from "vue";
 
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
-}
+  let County = reactive([
+    {name: 'Andijon'},
+    {name: 'Buxoro'},
+    {name: 'Farg\'ona'},
+    {name: 'Jizzax'},
+    {name: 'Namangan'},
+    {name: 'Qashqadaryo'},
+    {name: 'Qoraqalpog\'iston'},
+    {name: 'Sizrdaryo'},
+    {name: 'Samarqand'},
+    {name: 'Surxondaryo'},
+    {name: 'Tashkent'},
+    {name: 'Xorazm'},
+  ])
+</script>
+<style>
 
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-}
 </style>
