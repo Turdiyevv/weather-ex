@@ -16,10 +16,10 @@
         <div class="w-10/12">
           <div class="flex justify-between first__chapter">
             <div class="date-temp w-8/12">
-              <div class="text-2xl">28.02.2024</div>
-              <div class="text-7xl ml-7 mt-2 mr-2 font-sans flex">
-                {{ todayWeather }}°C
-                <span class="text-3xl m-9 text-blue-900">en: {{desc}}</span>
+              <div class="text-2xl">{{ date }}</div>
+              <div class="text-7xl ml-7 mt-2 mr-2 font-sans flex text-blue-700">
+                <span>{{ todayWeather }}°C</span>
+                <span class="text-3xl m-9">en: {{desc}}</span>
               </div>
             </div>
             <div class="image__style w-3/12">
@@ -27,7 +27,24 @@
               <img :src="imgWeather" alt="image" width="150" >
             </div>
           </div>
-          <div class="clock__weather sec__chapter">soatlik ob-havo</div>
+          <div class="sec__chapter">
+            <div class="grid gap-1 grid-cols-8">
+              <div class="gap__item">
+                <div class="flex">
+                  <img :src="imgWeather" alt="image" width="80">
+                  <div class="text-red-500">{{humidity}}</div>
+                </div>
+                <div>{{ todayWeather }}°C <span class="text-sm bg-white p-0.5 rounded ">{{clock}}</span></div>
+              </div>
+              <div class="gap__item">02</div>
+              <div class="gap__item">03</div>
+              <div class="gap__item">04</div>
+              <div class="gap__item">04</div>
+              <div class="gap__item">04</div>
+              <div class="gap__item">04</div>
+              <div class="gap__item">04</div>
+            </div>
+          </div>
           <div class="flex justify-between three__chapter">
             <div>4 kun</div>
             <div>4kun</div>
@@ -67,7 +84,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref} from 'vue'
 import http from '@/plugins/axios.js'
 import axios from 'axios'
 
@@ -89,61 +106,68 @@ let County = reactive([
 let cityName = ref('Hudud nomi');
 let todayWeather = reactive({});
 let desc = ref('');
+let date = ref('');
 let humidity = ref('');
 let icon = ref('');
 let imgWeather = ref('');
+let lat = ref();
+let lon = ref();
+let clock = ref('');
 
-const getItemWeather = async function (item) {
+async function getItemWeather(item) {
+  console.log(item)
   try {
-    let lat = item.lat
-    let lon = item.lon
-    const res = await http.get(
-      `data/2.8/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&` +
-        `appid=9dd86907fe501cec50da3d087e4e9dc0&units=metric&lang=uz`
-    )
-    todayWeather = res.data.current.temp
-    humidity = res.data.current.humidity
-    console.log(todayWeather);
-    icon.value = res.data.current.weather[0].icon
-    desc.value = res.data.current.weather[0].main
+    if (item){ lat = item.lat; lon = item.lon; cityName.value = item.name;}
+    else { lat = 39.6550017; lon = 66.9756954; }
+      const res = await http.get(
+        `data/2.8/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&` +
+          `appid=9dd86907fe501cec50da3d087e4e9dc0&units=metric&lang=uz`
+      )
+      todayWeather = res.data.current.temp;
+    if (!item){cityName.value = res.data.timezone;}
+      humidity.value = res.data.current.humidity
+      icon.value = res.data.current.weather[0].icon
+      desc.value = res.data.current.weather[0].main
 
-    const iconResponse = await axios.get(`https://openweathermap.org/img/wn/${icon.value}@2x.png`) //http orqali olmoqchi bo'lganimda cors error chiqdi.
-    imgWeather = iconResponse.request.responseURL;
-    cityName.value = item.name
+      const iconResponse = await axios.get(`https://openweathermap.org/img/wn/${icon.value}@2x.png`) //http orqali olmoqchi bo'lganimda cors error chiqdi.
+      imgWeather.value = iconResponse.request.responseURL;
   } catch (e) {
     console.log(e)
   }
 }
+getItemWeather()
 function getHozirgiSana() {
-    // Hozirgi sanani olish
     const hozirgiSana = new Date();
 
-    // Kun, oy, yilni aniqlash
     const kun = hozirgiSana.getDate();
     const oy = hozirgiSana.getMonth() + 1; // Oylar 0 dan boshlanadi, shuning uchun 1 qo'shib chiqamiz
     const yil = hozirgiSana.getFullYear();
 
-    // Soat va minutlarni aniqlash
     let soat = hozirgiSana.getHours();
     let minut = hozirgiSana.getMinutes();
+    clock = soat + ':'+ minut;
 
-    // Soatni 12 soatlik formatga o'zgartirish
-    const soatFormat = soat >= 12 ? 'PM' : 'AM';
-    soat = soat % 12 || 12; // 12 ga bo'linmasa 12 qo'shish
-    // soat = soat < 10 ? '0' + soat : soat;
-    // minut = minut < 10 ? '0' + minut : minut;
+    // const soatFormat = soat >= 12 ? 'PM' : 'AM'; //soatni 12 likka o'zgartirish
+    // soat = soat % 12 || 12;
 
-    return `${kun}/${oy}/${yil} ${soat}:${minut} ${soatFormat}`;
+    return (date.value = `${kun}-${oy}-${yil} ${soat}:${minut}`);
 }
+getHozirgiSana()
 
-console.log(getHozirgiSana());
 </script>
 <style>
 .first__chapter {
   height: 180px;
 }
 .sec__chapter {
+  margin: 7px;
+}
+.gap__item{
+  border-radius: 7px;
+  padding: 7px;
   height: 120px;
+  background-color: #e4eaf6;
+
 }
 .three__chapter {
   margin: 7px;
@@ -158,12 +182,6 @@ console.log(getHozirgiSana());
   padding: 5px;
 }
 .image__style {
-  margin: 7px;
-  border-radius: 7px;
-  padding: 5px;
-  background-color: #e4eaf6;
-}
-.clock__weather {
   margin: 7px;
   border-radius: 7px;
   padding: 5px;
