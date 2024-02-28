@@ -19,12 +19,14 @@
               <div class="text-2xl">{{ date }}</div>
               <div class="text-7xl ml-7 mt-2 mr-2 font-sans flex text-blue-700">
                 <span>{{ todayWeather }}°C</span>
-                <span class="text-3xl m-9">en: {{desc}}</span>
+                <span class="text-3xl m-9">{{desc}}</span>
               </div>
             </div>
-            <div class="image__style w-3/12">
-              <div class="ml-2">Namlik: {{humidity}}</div>
+            <div class="image__style w-3/12 flex">
               <img :src="imgWeather" alt="image" width="150" >
+              <div class="">
+                <div>Namlik: {{humidity}}</div>
+              </div>
             </div>
           </div>
           <div class="sec__chapter">
