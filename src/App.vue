@@ -1,13 +1,11 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue';
-
-  // http.get('/users').then(res => {
-  //   console.log (res.data)
-  // })
+// import TheWelcome from "@/components/TheWelcome.vue";
 </script>
 
 <template>
   <div class="common-layout">
+<!--    <the-welcome/>-->
     <el-container>
       <el-header>
         <h1 class="text-4xl my-2">Ob-havo O'zbekiston</h1>

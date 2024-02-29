@@ -32,11 +32,14 @@
           <div class="sec__chapter">
             <div class="grid gap-1 grid-cols-8">
               <div class="gap__item">
-                <div class="flex">
+                <div class="flex justify-between">
                   <img :src="imgWeather" alt="image" width="80">
                   <div class="text-red-500">{{humidity}}</div>
                 </div>
-                <div>{{ todayWeather }}°C <span class="text-sm bg-white p-0.5 rounded ">{{clock}}</span></div>
+                <div class="flex justify-between">
+                  <div>{{ todayWeather }}°C</div>
+                  <span class="text-sm bg-white p-0.5 rounded ">{{clock}}</span>
+                </div>
               </div>
               <div class="gap__item">02</div>
               <div class="gap__item">03</div>
