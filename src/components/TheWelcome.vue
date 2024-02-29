@@ -17,14 +17,9 @@
         <div class="w-11/12 sm:w-auto active:bg-blue-700 md:active:bg-blue-800 md:mx-1 md:p-0 p-1 ml-4" role="button">business-cabinet</div>
         <div class="w-11/12 sm:w-auto active:bg-blue-700 md:active:bg-blue-800 md:mx-1 md:p-0 p-1 ml-4" role="button">contacts</div>
       </div>
-      <el-button class="w-11/12 sm:w-auto md:ml-0 ml-4 bg-blue-800 text-white button__style">Smart bill</el-button>
+      <el-button class="w-11/12 sm:w-auto md:ml-0 ml-4 p-5 border-white border-1 rounded-xl bg-blue-800 text-white">Smart bill</el-button>
     </div>
   </div>
 </template>
 <style scoped>
-.button__style{
-  border: 1px solid white;
-  border-radius: 12px;
-  padding: 20px;
-}
 </style>
