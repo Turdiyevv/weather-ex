@@ -105,7 +105,8 @@ let County = reactive([
   { name: 'Samarqand', lat: 39.6550017, lon: 66.9756954 },
   { name: 'Surxondaryo', lat: 37.9409, lon: 67.5709 },
   { name: 'Tashkent', lat: 41.3123363, lon: 69.2787079 },
-  { name: 'Xorazm', lat: 41.3565, lon: 60.8567 }
+  { name: 'Xorazm', lat: 41.3565, lon: 60.8567 },
+  { name: 'Yakkabog\' tumani', lat: 38.88220587, lon: 66.82707718 }
 ])
 
 let cityName = ref('Hudud nomi');
@@ -123,7 +124,7 @@ async function getItemWeather(item) {
   console.log(item)
   try {
     if (item){ lat = item.lat; lon = item.lon; cityName.value = item.name;}
-    else { lat = 39.6550017; lon = 66.9756954; }
+    else { lat = 38.88220587; lon = 66.82707718; }
       const res = await http.get(
         `data/2.8/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&` +
           `appid=9dd86907fe501cec50da3d087e4e9dc0&units=metric&lang=uz`
@@ -198,7 +199,7 @@ getHozirgiSana()
   height: 90px;
 }
 .el-card__body {
-  height: 504px;
+  //height: 504px;
   padding: 0;
   margin: 0 5px;
   border-radius: 5px;
