@@ -31,6 +31,7 @@
           </div>
           <div class="sec__chapter">
             <div class="grid gap-1 grid-cols-8">
+
               <div class="gap__item">
                 <div class="flex justify-between">
                   <img :src="imgWeather" alt="image" width="80">
@@ -38,16 +39,21 @@
                 </div>
                 <div class="flex justify-between">
                   <div>{{ todayWeather }}°C</div>
-                  <span class="text-sm bg-white p-0.5 rounded ">{{clock}}</span>
+                  <span class="el-text--small bg-white p-0.5 rounded ">{{clock}}</span>
                 </div>
               </div>
-              <div class="gap__item">02</div>
-              <div class="gap__item">03</div>
-              <div class="gap__item">04</div>
-              <div class="gap__item">04</div>
-              <div class="gap__item">04</div>
-              <div class="gap__item">04</div>
-              <div class="gap__item">04</div>
+
+              <div class="gap__item" v-for="item in hourly">
+                <div class="flex justify-between">
+                  <img :src="imgWeather" alt="image" width="80">
+                  <div class="text-red-500">{{item.humidity}}</div>
+                </div>
+                <div class="flex justify-between">
+                  <div>{{ item.temp }}°C</div>
+                  <span class="el-text--small bg-white p-0.5 rounded ">{{clock}}</span>
+                </div>
+              </div>
+
             </div>
           </div>
           <div class="flex justify-between three__chapter">
@@ -92,6 +98,7 @@
 import { reactive, ref} from 'vue'
 import http from '@/plugins/axios.js'
 import axios from 'axios'
+import {createLogger} from "vite";
 
 let County = reactive([
   { name: 'Andijon', lat: 40.7833471, lon: 72.3506746 },
@@ -120,8 +127,28 @@ let lat = ref();
 let lon = ref();
 let clock = ref('');
 
+let soat = ref('');
+let hourly = ref([]);
+let minut = ref('');
+
+
+
+function getHozirgiSana() {
+    const hozirgiSana = new Date();
+    const kun = hozirgiSana.getDate();
+    const oy = hozirgiSana.getMonth() + 1; // Oylar 0 dan boshlanadi, shuning uchun 1 qo'shib chiqamiz
+    const yil = hozirgiSana.getFullYear();
+    soat = hozirgiSana.getHours();
+    minut = hozirgiSana.getMinutes();
+    clock = soat + ':'+ minut;
+
+    // const soatFormat = soat >= 12 ? 'PM' : 'AM'; //soatni 12 likka o'zgartirish
+    // soat = soat % 12 || 12;
+
+    return (date.value = `${kun}-${oy}-${yil} ${soat}:${minut}`);
+}
+getHozirgiSana()
 async function getItemWeather(item) {
-  console.log(item)
   try {
     if (item){ lat = item.lat; lon = item.lon; cityName.value = item.name;}
     else { lat = 38.88220587; lon = 66.82707718; }
@@ -130,6 +157,15 @@ async function getItemWeather(item) {
           `appid=9dd86907fe501cec50da3d087e4e9dc0&units=metric&lang=uz`
       )
       todayWeather = res.data.current.temp;
+    hourly = [
+        res.data.hourly[soat+1],
+        res.data.hourly[soat+2],
+        res.data.hourly[soat+3],
+        res.data.hourly[soat+4],
+        res.data.hourly[soat+5],
+        res.data.hourly[soat+6],
+        res.data.hourly[soat+7],
+    ]
     if (!item){cityName.value = res.data.timezone;}
       humidity.value = res.data.current.humidity
       icon.value = res.data.current.weather[0].icon
@@ -142,23 +178,6 @@ async function getItemWeather(item) {
   }
 }
 getItemWeather()
-function getHozirgiSana() {
-    const hozirgiSana = new Date();
-
-    const kun = hozirgiSana.getDate();
-    const oy = hozirgiSana.getMonth() + 1; // Oylar 0 dan boshlanadi, shuning uchun 1 qo'shib chiqamiz
-    const yil = hozirgiSana.getFullYear();
-
-    let soat = hozirgiSana.getHours();
-    let minut = hozirgiSana.getMinutes();
-    clock = soat + ':'+ minut;
-
-    // const soatFormat = soat >= 12 ? 'PM' : 'AM'; //soatni 12 likka o'zgartirish
-    // soat = soat % 12 || 12;
-
-    return (date.value = `${kun}-${oy}-${yil} ${soat}:${minut}`);
-}
-getHozirgiSana()
 
 </script>
 <style>
@@ -166,6 +185,7 @@ getHozirgiSana()
   height: 180px;
 }
 .sec__chapter {
+  font-size: 10px;
   margin: 7px;
 }
 .gap__item{
