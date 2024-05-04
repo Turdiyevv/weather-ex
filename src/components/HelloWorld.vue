@@ -33,24 +33,28 @@
             <div class="grid gap-1 grid-cols-8">
 
               <div class="gap__item">
-                <div class="flex justify-between">
+                <div class="">
+                  <div class="text-red-500 flex justify-end">
+                    <span class="mr-1">namlik:</span><span>{{humidity}}</span>
+                  </div>
                   <img :src="imgWeather" alt="image" width="80">
-                  <div class="text-red-500">{{humidity}}</div>
                 </div>
                 <div class="flex justify-between">
-                  <div>{{ todayWeather }}°C</div>
+                  <div class="p-0.5">{{ todayWeather }}°C</div>
                   <span class="el-text--small bg-white p-0.5 rounded ">{{clock}}</span>
                 </div>
               </div>
 
               <div class="gap__item" v-for="item in hourly">
-                <div class="flex justify-between">
-                  <img :src="imgWeather" alt="image" width="80">
-                  <div class="text-red-500">{{item.humidity}}</div>
+                <div class="">
+                  <div class="text-red-500 flex justify-end">
+                    <span class="mr-1">namlik:</span><span>{{item.humidity}}</span>
+                  </div>
+                  <img :src="imgUrlF+item.icon+imgUrlL" alt="image" width="80">
                 </div>
                 <div class="flex justify-between">
-                  <div>{{ item.temp }}°C</div>
-                  <span class="el-text--small bg-white p-0.5 rounded ">{{clock}}</span>
+                  <div class="p-0.5">{{ item.temp }}°C</div>
+                  <span class="el-text--small bg-white p-0.5 rounded ">{{item.hour}}</span>
                 </div>
               </div>
 
@@ -122,15 +126,16 @@ let desc = ref('');
 let date = ref('');
 let humidity = ref('');
 let icon = ref('');
-let imgWeather = ref('');
+let imgWeather = ref('noo');
 let lat = ref();
 let lon = ref();
 let clock = ref('');
 
-let soat = ref('');
 let hourly = ref([]);
+let soat = ref('');
 let minut = ref('');
 
+let daily = reactive([])
 
 
 function getHozirgiSana() {
@@ -147,7 +152,7 @@ function getHozirgiSana() {
 
     return (date.value = `${kun}-${oy}-${yil} ${soat}:${minut}`);
 }
-getHozirgiSana()
+getHozirgiSana();
 async function getItemWeather(item) {
   try {
     if (item){ lat = item.lat; lon = item.lon; cityName.value = item.name;}
@@ -157,27 +162,86 @@ async function getItemWeather(item) {
           `appid=9dd86907fe501cec50da3d087e4e9dc0&units=metric&lang=uz`
       )
       todayWeather = res.data.current.temp;
-    hourly = [
-        res.data.hourly[soat+1],
-        res.data.hourly[soat+2],
-        res.data.hourly[soat+3],
-        res.data.hourly[soat+4],
-        res.data.hourly[soat+5],
-        res.data.hourly[soat+6],
-        res.data.hourly[soat+7],
-    ]
-    if (!item){cityName.value = res.data.timezone;}
-      humidity.value = res.data.current.humidity
-      icon.value = res.data.current.weather[0].icon
-      desc.value = res.data.current.weather[0].main
+    // hourly
+      hourly = [
+        {
+          humidity: res.data.hourly[2].humidity,
+          temp: res.data.hourly[2].temp,
+          icon: res.data.hourly[2].weather[0].icon,
+          hour: (soat+1) % 24 +":"+ minut
+        },
+        {
+          humidity: res.data.hourly[3].humidity,
+          temp: res.data.hourly[3].temp,
+          icon: res.data.hourly[3].weather[0].icon,
+          hour: (soat+2) % 24 +":"+ minut
+        },
+        {
+          humidity: res.data.hourly[4].humidity,
+          temp: res.data.hourly[4].temp,
+          icon: res.data.hourly[4].weather[0].icon,
+          hour: (soat+3) % 24 +":"+ minut
+        },
+        {
+          humidity: res.data.hourly[5].humidity,
+          temp: res.data.hourly[5].temp,
+          icon: res.data.hourly[5].weather[0].icon,
+          hour: (soat+4) % 24 +":"+ minut
+        },
+        {
+          humidity: res.data.hourly[6].humidity,
+          temp: res.data.hourly[6].temp,
+          icon: res.data.hourly[6].weather[0].icon,
+          hour: (soat+5) % 24 +":"+ minut
+        },
+        {
+          humidity: res.data.hourly[7].humidity,
+          temp: res.data.hourly[7].temp,
+          icon: res.data.hourly[7].weather[0].icon,
+          hour: (soat+6) % 24 +":"+ minut
+        },
+        {
+          humidity: res.data.hourly[8].humidity,
+          temp: res.data.hourly[8].temp,
+          icon: res.data.hourly[8].weather[0].icon,
+          hour: (soat+7) % 24 +":"+ minut
+        },
+      ];
+    // daily
+    daily = [
+        res.data.daily,
+    console.log(res.data.daily)
+    ];
 
-      const iconResponse = await axios.get(`https://openweathermap.org/img/wn/${icon.value}@2x.png`) //http orqali olmoqchi bo'lganimda cors error chiqdi.
-      imgWeather.value = iconResponse.request.responseURL;
+    if (!item){cityName.value = res.data.timezone;}
+      humidity.value = res.data.current.humidity;
+      icon.value = res.data.current.weather[0].icon;
+      desc.value = res.data.current.weather[0].main;
+      getImgUrl(icon.value).then(url => {
+        imgWeather.value = url;
+      });
   } catch (e) {
     console.log(e)
   }
 }
-getItemWeather()
+getItemWeather();
+
+const imgUrlF = ref('https://openweathermap.org/img/wn/');
+const imgUrlL = ref('@2x.png');
+async function getImgUrl(value) {
+  if (value) {
+    try {
+      const res = await axios.get(`https://openweathermap.org/img/wn/${value}@2x.png`);
+      return res.request.responseURL;
+      console.log(res.request.responseURL)
+    } catch (error) {
+      console.error("Xatolik yuz berdi:", error);
+      return null;
+    }
+  } else {
+    return '';
+  }
+}
 
 </script>
 <style>
@@ -191,7 +255,7 @@ getItemWeather()
 .gap__item{
   border-radius: 7px;
   padding: 7px;
-  height: 120px;
+  //height: 120px;
   background-color: #e4eaf6;
 
 }
