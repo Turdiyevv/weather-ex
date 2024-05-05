@@ -1,5 +1,8 @@
 <template>
   <div class="">
+    <el-card class="mb-1">
+      Ob-havo O'zbekiston
+    </el-card>
     <el-card class="box-card w-full">
       <template #header>
         <el-row class="card-header">
@@ -16,12 +19,13 @@
         <el-col :xl="20" :lg="20" :md="20" class="">
           <el-row class="px-1.5">
             <el-col :xl="17" :lg="17" :md="17" class="">
-              <div class="text-2xl border-solid border-2 border-sky-500 rounded"
-                style="width: max-content"
-              >{{ date }}</div>
-              <div class="text-7xl my-2 font-sans flex items-end text-blue-700">
-                <span>{{ todayWeather.temp }}°C</span>
-                <span class="text-3xl ml-2">{{todayWeather.main}}</span>
+              <div class=" font-sans">
+                <div class="text-7xl text-blue-700">{{ todayWeather.temp }}°C</div>
+                <div class="px-2 text-2xl border-solid border-2 border-sky-500 rounded"
+                  style="width: max-content"
+                >{{ date }}
+                </div>
+                <div class="text-blue-700 text-3xl">{{todayWeather.main}}</div>
               </div>
             </el-col>
             <el-col :xl="7" :lg="7" :md="7" class="bg__style p-1 rounded flex">
@@ -55,11 +59,11 @@
           <el-row>
             <el-col :xl="12" :lg="12" :md="12" :sm="24" v-for="item in daily">
               <el-row class="three__chapter flex">
-                <el-col :xl="8" :lg="8" :md="8" :sm="8" class="w-4/12">
+                <el-col :xl="8" :lg="8" :md="8" :sm="8" class="">
                   <img :src="imgUrlF+item.icon+imgUrlL" alt="image" width="80">
                   <div>{{item.description}}</div>
                 </el-col>
-                <el-col :xl="8" :lg="8" :md="8" :sm="8" class="my-auto w-4/12">
+                <el-col :xl="8" :lg="8" :md="8" :sm="8" class="my-auto">
                   <div>
                     <span class="mr-0.5">max harorat:</span>
                     <span class=" text-red-500">{{item.temp}}°C</span>
@@ -69,7 +73,7 @@
                     <span class=" text-blue-500">{{item.humidity}}</span>
                   </div>
                 </el-col>
-                <el-col :xl="8" :lg="8" :md="8" :sm="8" class="item-center flex flex-wrap w-4/12">
+                <el-col :xl="8" :lg="8" :md="8" :sm="8" class="item-center flex flex-wrap">
                   <div class="m-1 p-0.5 bg-orange-200 rounded text-black-500" style="width: -webkit-fill-available;">
                     <span class="mr-0.5">kunduzgi harorat:</span>
                     <span>{{item.tempDay}}°C</span>
@@ -100,21 +104,23 @@
       </el-row>
 
       <template #footer>
-        <div class="flex justify-between my-3">
-          <div class="w-10/12">footer</div>
-          <div class="w-2/12">
-            <el-button type="success" class="mx-2 w-11/12">
-              <el-link href="https://t.me/Turdiyev07" style="width: 180px">
+        <el-row>
+          <el-col :xl="20" :lg="20" :md="20">
+            <div class="mx-2">footer</div>
+          </el-col>
+          <el-col :xl="4" :lg="4" :md="4">
+            <el-button type="primary" class="mx-2" style="width: -webkit-fill-available">
+              <el-link href="https://t.me/Turdiyev07" style="">
                 <img
                   src="../assets/png-telegram-icon.png"
                   alt="telegram"
                   style="width: 30px; height: 30px; text-decoration: none"
                 />
-                <div class="9/12 text-blue-600">Turdiyev</div>
+                <div class="ml-2 text-xl text-blue-600">Turdiyev</div>
               </el-link>
             </el-button>
-          </div>
-        </div>
+          </el-col>
+        </el-row>
       </template>
     </el-card>
   </div>
