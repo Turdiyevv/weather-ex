@@ -28,7 +28,7 @@
                 <div class="text-blue-700 text-3xl">{{todayWeather.main}}</div>
               </div>
             </el-col>
-            <el-col :xl="7" :lg="7" :md="7" class="bg__style p-1 rounded flex">
+            <el-col :xl="7" :lg="7" :md="7" :sm="12" class="bg__style p-1 rounded flex">
               <img :src="imgUrlF+todayWeather.icon+imgUrlL" alt="image" size="185px" >
               <div class="items-center my-auto ml-auto py-0.5 px-2 bg-orange-200 rounded">
                 <div>namlik: {{todayWeather.humidity}}</div>
