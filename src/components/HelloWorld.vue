@@ -1,9 +1,25 @@
 <template>
   <div class="">
     <el-card class="mb-1">
-      Ob-havo O'zbekiston
+      <div>Ob-havo O'zbekiston</div>
+      <el-button :type="todayWeather.main ? 'success': 'danger'" @click="devFunction" class="my-2">
+        <div class="text-black">developer</div>
+      </el-button>
+      <el-dialog v-model="devDialog">
+        <el-card class="p-2">
+          <div>developer password</div>
+          <el-input class="my-1" v-model="password" placeholder="tek...ish"></el-input>
+          <el-button @click="checkInputPassword" type="warning" plain>check password</el-button>
+        </el-card>
+      </el-dialog>
+      <div v-show="showData">
+        <div class="text-blue-500">{{todayWeather}},</div>
+        <div class="text-red-700">{{hourly}},</div>
+        <div class="text-blue-900">{{daily}}</div>
+        <el-button class="my-2" type="danger" plain @click="showData = false;">close</el-button>
+      </div>
     </el-card>
-    <el-card class="box-card w-full">
+    <el-card class="box-card w-full" v-loading="loading">
       <template #header>
         <el-row class="card-header">
           <el-col :xl="12" :lg="12" :md="12" class="text-3xl">
@@ -126,11 +142,31 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive, ref} from 'vue'
+import {onMounted, reactive, ref} from 'vue'
 import http from '@/plugins/axios.js'
 import axios from 'axios'
 import {createLogger} from "vite";
+import {ElNotification} from "element-plus";
 
+let devDialog = ref(false)
+let password = ref('')
+let showData = ref(false)
+const open1 = () => {
+  ElNotification({
+    title: 'Success',
+    message: 'Developer bo\'limi muvaffaqiyatli ochildi' ,
+    type: 'success',
+  })
+}
+const open4 = () => {
+  ElNotification({
+    title: 'Error',
+    message: 'Xatolik yuz berdi developerga murojaat qiling!',
+    type: 'error',
+  })
+}
+
+let loading = ref(false)
 let County = reactive([
   { name: 'Andijon', lat: 40.7833471, lon: 72.3506746 },
   { name: 'Buxoro', lat: 39.7675529, lon: 64.4231326 },
@@ -148,21 +184,31 @@ let County = reactive([
 ])
 
 let cityName = ref('Hudud nomi');
-let todayWeather = reactive({});
 let date = ref('');
-let humidity = ref('');
-let icon = ref('');
-let imgWeather = ref('noo');
 let lat = ref();
 let lon = ref();
 let clock = ref('');
 
-let hourly = ref([]);
+let todayWeather = reactive({});
+let hourly = reactive([]);
+let daily = reactive([]);
+
 let soat = ref('');
 let minut = ref('');
 
-let daily = reactive([])
-
+function devFunction(){
+  devDialog.value = !devDialog.value;
+}
+function checkInputPassword(){
+  if (password.value && password.value === 'tekshirish'){
+    open1();
+    showData.value = true;
+  }else {
+    open4();
+  }
+  devDialog.value = false;
+  password.value = '';
+}
 
 function getHozirgiSana() {
     const hozirgiSana = new Date();
@@ -179,15 +225,18 @@ function getHozirgiSana() {
     return (date.value = `${kun}-${oy}-${yil} ${soat}:${minut}`);
 }
 getHozirgiSana();
+
 async function getItemWeather(item) {
+  // loading = true;
   try {
     if (item){ lat = item.lat; lon = item.lon; cityName.value = item.name;}
-    else { lat = 38.88220587; lon = 66.82707718; }
-      const res = await http.get(
-        `data/2.8/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&` +
-          `appid=9dd86907fe501cec50da3d087e4e9dc0&units=metric&lang=uz`
-      )
-      todayWeather = {
+    else { lat = 38.88220587; lon = 66.82707718; cityName.value = 'Yakkabog\' tumani'}
+
+    const res = await http.get(
+      `data/2.8/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&` +
+        `appid=9dd86907fe501cec50da3d087e4e9dc0&units=metric&lang=uz`
+    )
+    todayWeather = {
         temp: res.data.current.temp,
         humidity: res.data.current.humidity,
         icon: res.data.current.weather[0].icon,
@@ -195,7 +244,7 @@ async function getItemWeather(item) {
         description: res.data.current.weather[0].description
       };
     // hourly
-      hourly = [
+    hourly = [
         {
           humidity: res.data.hourly[0].humidity,
           temp: res.data.hourly[0].temp,
@@ -312,30 +361,17 @@ async function getItemWeather(item) {
         description: res.data.daily[7].weather[0].description
       }
     ];
-
-    if (!item){cityName.value = res.data.timezone;}
+    // loading = false;
+    // console.log(loading)
   } catch (e) {
-    console.log(e)
+    return alert(e)
   }
 }
 getItemWeather();
 
+
 const imgUrlF = ref('https://openweathermap.org/img/wn/');
 const imgUrlL = ref('@2x.png');
-async function getImgUrl(value) {
-  if (value) {
-    try {
-      const res = await axios.get(`https://openweathermap.org/img/wn/${value}@2x.png`);
-      return res.request.responseURL;
-      console.log(res.request.responseURL)
-    } catch (error) {
-      console.error("Xatolik yuz berdi:", error);
-      return null;
-    }
-  } else {
-    return '';
-  }
-}
 
 </script>
 <style>
