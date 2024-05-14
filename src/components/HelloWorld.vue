@@ -6,11 +6,9 @@
         <div class="text-black">developer</div>
       </el-button>
       <el-dialog v-model="devDialog">
-        <el-card class="p-2">
           <div>developer password</div>
-          <el-input class="my-1" v-model="password" placeholder="tek...ish"></el-input>
-          <el-button @click="checkInputPassword" type="warning" plain>check password</el-button>
-        </el-card>
+          <el-input class="my-1" v-model="password" placeholder="12..."></el-input>
+          <el-button @click="checkInputPassword" @keydown.enter="checkInputPassword" type="warning" plain>check password</el-button>
       </el-dialog>
       <div v-show="showData">
         <div class="text-blue-500">{{todayWeather}},</div>
@@ -31,7 +29,7 @@
         </el-row>
       </template>
 
-      <el-row class="">
+      <el-row>
         <el-col :xl="20" :lg="20" :md="20" class="">
           <el-row class="px-1.5">
             <el-col :xl="17" :lg="17" :md="17" class="">
@@ -54,7 +52,7 @@
           </el-row>
 
           <div class="sec__chapter">
-            <el-row class="">
+            <el-row>
               <el-col :xl="3" :lg="3" :md="3" :sm="6" v-for="item in hourly">
                 <div class="gap__item m-0.5">
                   <div class="">
@@ -189,9 +187,9 @@ let lat = ref();
 let lon = ref();
 let clock = ref('');
 
-let todayWeather = reactive({});
-let hourly = reactive([]);
-let daily = reactive([]);
+let todayWeather = ref({});
+let hourly = ref([]);
+let daily = ref([]);
 
 let soat = ref('');
 let minut = ref('');
@@ -200,7 +198,7 @@ function devFunction(){
   devDialog.value = !devDialog.value;
 }
 function checkInputPassword(){
-  if (password.value && password.value === 'tekshirish'){
+  if (password.value && password.value === '123'){
     open1();
     showData.value = true;
   }else {
@@ -210,92 +208,76 @@ function checkInputPassword(){
   password.value = '';
 }
 
-function getHozirgiSana() {
-    const hozirgiSana = new Date();
-    const kun = hozirgiSana.getDate();
-    const oy = hozirgiSana.getMonth() + 1; // Oylar 0 dan boshlanadi, shuning uchun 1 qo'shib chiqamiz
-    const yil = hozirgiSana.getFullYear();
-    soat = hozirgiSana.getHours();
-    minut = hozirgiSana.getMinutes();
-    clock = soat + ':'+ minut;
-
-    // const soatFormat = soat >= 12 ? 'PM' : 'AM'; //soatni 12 likka o'zgartirish
-    // soat = soat % 12 || 12;
-
-    return (date.value = `${kun}-${oy}-${yil} ${soat}:${minut}`);
-}
-getHozirgiSana();
-
 async function getItemWeather(item) {
-  // loading = true;
   try {
+    // loading = true;
     if (item){ lat = item.lat; lon = item.lon; cityName.value = item.name;}
     else { lat = 38.88220587; lon = 66.82707718; cityName.value = 'Yakkabog\' tumani'}
 
     const res = await http.get(
       `data/2.8/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&` +
         `appid=9dd86907fe501cec50da3d087e4e9dc0&units=metric&lang=uz`
-    )
-    todayWeather = {
-        temp: res.data.current.temp,
-        humidity: res.data.current.humidity,
-        icon: res.data.current.weather[0].icon,
-        main: res.data.current.weather[0].main,
-        description: res.data.current.weather[0].description
-      };
-    // hourly
-    hourly = [
-        {
-          humidity: res.data.hourly[0].humidity,
-          temp: res.data.hourly[0].temp,
-          icon: res.data.hourly[0].weather[0].icon,
-          hour: (soat+1) % 24 +":"+ minut
-        },
-        {
-          humidity: res.data.hourly[1].humidity,
-          temp: res.data.hourly[1].temp,
-          icon: res.data.hourly[1].weather[0].icon,
-          hour: (soat+2) % 24 +":"+ minut
-        },
-        {
-          humidity: res.data.hourly[2].humidity,
-          temp: res.data.hourly[2].temp,
-          icon: res.data.hourly[2].weather[0].icon,
-          hour: (soat+3) % 24 +":"+ minut
-        },
-        {
-          humidity: res.data.hourly[3].humidity,
-          temp: res.data.hourly[3].temp,
-          icon: res.data.hourly[3].weather[0].icon,
-          hour: (soat+4) % 24 +":"+ minut
-        },
-        {
-          humidity: res.data.hourly[4].humidity,
-          temp: res.data.hourly[4].temp,
-          icon: res.data.hourly[4].weather[0].icon,
-          hour: (soat+5) % 24 +":"+ minut
-        },
-        {
-          humidity: res.data.hourly[5].humidity,
-          temp: res.data.hourly[5].temp,
-          icon: res.data.hourly[5].weather[0].icon,
-          hour: (soat+6) % 24 +":"+ minut
-        },
-        {
-          humidity: res.data.hourly[6].humidity,
-          temp: res.data.hourly[6].temp,
-          icon: res.data.hourly[6].weather[0].icon,
-          hour: (soat+7) % 24 +":"+ minut
-        },
-        {
-          humidity: res.data.hourly[7].humidity,
-          temp: res.data.hourly[7].temp,
-          icon: res.data.hourly[7].weather[0].icon,
-          hour: (soat+7) % 24 +":"+ minut
-        },
-      ];
-    // daily
-    daily = [
+    ).then(res=>{
+      todayWeather.value = {
+          temp: res.data.current.temp,
+          humidity: res.data.current.humidity,
+          icon: res.data.current.weather[0].icon,
+          main: res.data.current.weather[0].main,
+          description: res.data.current.weather[0].description
+        };
+      // hourly
+      hourly.value = [
+          {
+            humidity: res.data.hourly[0].humidity,
+            temp: res.data.hourly[0].temp,
+            icon: res.data.hourly[0].weather[0].icon,
+            hour: (soat+0) % 24 +":"+ minut
+          },
+          {
+            humidity: res.data.hourly[1].humidity,
+            temp: res.data.hourly[1].temp,
+            icon: res.data.hourly[1].weather[0].icon,
+            hour: (soat+1) % 24 +":"+ minut
+          },
+          {
+            humidity: res.data.hourly[2].humidity,
+            temp: res.data.hourly[2].temp,
+            icon: res.data.hourly[2].weather[0].icon,
+            hour: (soat+2) % 24 +":"+ minut
+          },
+          {
+            humidity: res.data.hourly[3].humidity,
+            temp: res.data.hourly[3].temp,
+            icon: res.data.hourly[3].weather[0].icon,
+            hour: (soat+3) % 24 +":"+ minut
+          },
+          {
+            humidity: res.data.hourly[4].humidity,
+            temp: res.data.hourly[4].temp,
+            icon: res.data.hourly[4].weather[0].icon,
+            hour: (soat+4) % 24 +":"+ minut
+          },
+          {
+            humidity: res.data.hourly[5].humidity,
+            temp: res.data.hourly[5].temp,
+            icon: res.data.hourly[5].weather[0].icon,
+            hour: (soat+5) % 24 +":"+ minut
+          },
+          {
+            humidity: res.data.hourly[6].humidity,
+            temp: res.data.hourly[6].temp,
+            icon: res.data.hourly[6].weather[0].icon,
+            hour: (soat+6) % 24 +":"+ minut
+          },
+          {
+            humidity: res.data.hourly[7].humidity,
+            temp: res.data.hourly[7].temp,
+            icon: res.data.hourly[7].weather[0].icon,
+            hour: (soat+7) % 24 +":"+ minut
+          },
+        ];
+      // daily
+      daily.value = [
       {
         humidity: res.data.daily[0].humidity,
         temp: res.data.daily[0].temp.max,
@@ -361,13 +343,29 @@ async function getItemWeather(item) {
         description: res.data.daily[7].weather[0].description
       }
     ];
-    // loading = false;
-    // console.log(loading)
+      // loading = false;
+    })
   } catch (e) {
     return alert(e)
   }
 }
 getItemWeather();
+
+function getHozirgiSana() {
+    const hozirgiSana = new Date();
+    const kun = hozirgiSana.getDate();
+    const oy = hozirgiSana.getMonth() + 1; // Oylar 0 dan boshlanadi, shuning uchun 1 qo'shib chiqamiz
+    const yil = hozirgiSana.getFullYear();
+    soat = hozirgiSana.getHours();
+    minut = hozirgiSana.getMinutes();
+    clock = soat + ':'+ minut;
+
+    // const soatFormat = soat >= 12 ? 'PM' : 'AM'; //soatni 12 likka o'zgartirish
+    // soat = soat % 12 || 12;
+
+    return (date.value = `${kun}-${oy}-${yil} ${soat}:${minut}`);
+}
+getHozirgiSana();
 
 
 const imgUrlF = ref('https://openweathermap.org/img/wn/');
