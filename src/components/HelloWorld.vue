@@ -30,12 +30,12 @@
       </template>
 
       <el-row>
-        <el-col :xl="20" :lg="20" :md="20" class="">
-          <el-row class="px-1.5">
-            <el-col :xl="17" :lg="17" :md="17" class="">
+        <el-col :xl="20" :lg="20" :md="20">
+          <el-row class="mx-2" style="border: 1px solid #598df6; border-radius: 7px">
+            <el-col :xl="17" :lg="17" :md="17" class="px-1">
               <div class=" font-sans">
                 <div class="text-7xl text-blue-700">{{ todayWeather.temp }}°C</div>
-                <div class="px-2 text-2xl border-solid border-2 border-sky-500 rounded"
+                <div class="text-2xl border-solid border-2 border-sky-500 rounded"
                   style="width: max-content"
                 >{{ date }}
                 </div>
@@ -44,7 +44,7 @@
             </el-col>
             <el-col :xl="7" :lg="7" :md="7" :sm="12" class="bg__style p-1 rounded flex">
               <img :src="imgUrlF+todayWeather.icon+imgUrlL" alt="image" size="185px" >
-              <div class="items-center my-auto ml-auto py-0.5 px-2 bg-orange-200 rounded">
+              <div class="items-center my-auto ml-auto py-0.5 px-2 bg-orange-200 rounded text-xl">
                 <div>namlik: {{todayWeather.humidity}}</div>
                 <div>{{todayWeather.description}}</div>
               </div>
@@ -54,8 +54,8 @@
           <div class="sec__chapter">
             <el-row>
               <el-col :xl="3" :lg="3" :md="3" :sm="6" v-for="item in hourly">
-                <div class="gap__item m-0.5">
-                  <div class="">
+                <div class="gap__item m-0.5 text-lg">
+                  <div>
                     <div class="text-red-500 flex justify-end">
                       <span class="mr-1">namlik:</span><span>{{item.humidity}}</span>
                     </div>
@@ -72,8 +72,8 @@
 
           <el-row>
             <el-col :xl="12" :lg="12" :md="12" :sm="24" v-for="item in daily">
-              <el-row class="three__chapter flex">
-                <el-col :xl="8" :lg="8" :md="8" :sm="8" class="">
+              <el-row class="three__chapter flex text-lg">
+                <el-col :xl="8" :lg="8" :md="8" :sm="8">
                   <img :src="imgUrlF+item.icon+imgUrlL" alt="image" width="80">
                   <div>{{item.description}}</div>
                 </el-col>
@@ -88,13 +88,25 @@
                   </div>
                 </el-col>
                 <el-col :xl="8" :lg="8" :md="8" :sm="8" class="item-center flex flex-wrap">
-                  <div class="m-1 p-0.5 bg-orange-200 rounded text-black-500" style="width: -webkit-fill-available;">
-                    <span class="mr-0.5">kunduzgi harorat:</span>
-                    <span>{{item.tempDay}}°C</span>
+                  <div class=" flex items-center m-1 p-1 bg-orange-200 rounded text-black-500"
+                       style="width: -webkit-fill-available; min-height: 100px">
+                    <div class="flex flex-wrap items-center">
+                      <div class="mr-5">
+                        <img src='../assets/sun.svg' width="45">
+                      </div>
+                      <div class="mr-0.5">kunduzgi harorat:</div>
+                      <div>{{item.tempDay}}°C</div>
+                    </div>
                   </div>
-                  <div class="m-1 p-0.5 bg-black rounded text-white" style="width: -webkit-fill-available;">
-                    <span class="mr-0.5">kechasi harorat:</span>
-                    <span>{{item.tempNight}}°C</span>
+                  <div class="flex items-center m-1 p-1 bg-black rounded text-white"
+                       style="width: -webkit-fill-available; min-height: 100px">
+                    <div class="flex flex-wrap items-center">
+                      <div class="mr-5">
+                        <img src='../assets/moon.svg' width="40">
+                      </div>
+                      <div class="mr-0.5">kechasi harorat:</div>
+                      <div>{{item.tempNight}}°C</div>
+                    </div>
                   </div>
                 </el-col>
               </el-row>
@@ -384,14 +396,13 @@ const imgUrlL = ref('@2x.png');
   border-radius: 7px;
   padding: 5px;
   //height: 120px;
-  background-color: #e4eaf6;
-
+  background-color: #88c0fd;
 }
 .three__chapter {
   margin: 7px;
   border-radius: 7px;
   padding: 5px;
-  background-color: #e4eaf6;
+  background-color: #c2dffd;
   //height: 170px;
 }
 .date-temp {
@@ -400,10 +411,7 @@ const imgUrlL = ref('@2x.png');
   padding: 5px;
 }
 .bg__style {
-  //margin: 7px;
-  //border-radius: 7px;
-  //padding: 5px;
-  background-color: #e4eaf6;
+  background-color: #598df6;
 }
 .el-card__header {
   padding: 0;
