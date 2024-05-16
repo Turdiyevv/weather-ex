@@ -61,9 +61,9 @@
                     </div>
                     <img :src="imgUrlF+item.icon+imgUrlL" alt="image" size="80">
                   </div>
-                  <div class="flex justify-between">
+                  <div class="flex justify-between flex-wrap">
                     <div class="p-0.5">{{ item.temp }}°C</div>
-                    <span class="el-text--small bg-white p-0.5 rounded ">{{item.hour}}</span>
+                    <span class="bg-white px-2 rounded ">{{item.hour}}</span>
                   </div>
                 </div>
               </el-col>
@@ -73,11 +73,13 @@
           <el-row>
             <el-col :xl="12" :lg="12" :md="12" :sm="24" v-for="item in daily">
               <el-row class="three__chapter flex text-lg">
-                <el-col :xl="8" :lg="8" :md="8" :sm="8">
-                  <img :src="imgUrlF+item.icon+imgUrlL" alt="image" width="80">
-                  <div>{{item.description}}</div>
+                <el-col :xl="12" :lg="12" :md="12" :sm="8" class="px-1.5 flex items-center flex-wrap">
+                  <div>
+                    <img :src="imgUrlF+item.icon+imgUrlL" alt="image" width="80">
+                    <div>{{item.description}}</div>
+                  </div>
                 </el-col>
-                <el-col :xl="8" :lg="8" :md="8" :sm="8" class="my-auto">
+                <el-col :xl="12" :lg="12" :md="12" :sm="8" class="my-auto">
                   <div>
                     <span class="mr-0.5">max harorat:</span>
                     <span class=" text-red-500">{{item.temp}}°C</span>
@@ -87,7 +89,7 @@
                     <span class=" text-blue-500">{{item.humidity}}</span>
                   </div>
                 </el-col>
-                <el-col :xl="8" :lg="8" :md="8" :sm="8" class="item-center flex flex-wrap">
+                <el-col :xl="24" :lg="24" :md="24" :sm="8" class="item-center flex flex-wrap">
                   <div class=" flex items-center m-1 p-1 bg-orange-200 rounded text-black-500"
                        style="width: -webkit-fill-available; min-height: 100px">
                     <div class="flex flex-wrap items-center">
@@ -397,6 +399,7 @@ const imgUrlL = ref('@2x.png');
   padding: 5px;
   //height: 120px;
   background-color: #88c0fd;
+
 }
 .three__chapter {
   margin: 7px;
