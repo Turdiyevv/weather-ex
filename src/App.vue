@@ -7,7 +7,7 @@ import HelloWorld from './components/HelloWorld.vue';
   <div class="common-layout">
 <!--    <the-welcome/>-->
     <el-container>
-      <el-main>
+      <el-main class="p-0.5">
         <HelloWorld/>
       </el-main>
     </el-container>
